@@ -3,7 +3,7 @@ defmodule Emojibot.Bot do
   use Slack
 
   def handle_event(%{name: name, type: "emoji_changed", subtype: "add"}, slack, state) do
-    emoji_channel = Application.get_env(:emojibot, :emoji_channel);
+    emoji_channel = Application.get_env(:emojibot, :emoji_channel)
     send_message(":#{name}:", emoji_channel, slack)
 
     {:ok, state}
