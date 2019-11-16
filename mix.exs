@@ -10,6 +10,6 @@ defmodule Emojibot.Mixfile do
   end
 
   defp deps do
-    [{:slack, "~> 0.9.1"}]
+    [{:slack, "~> 0.19.0"}]
   end
 end
