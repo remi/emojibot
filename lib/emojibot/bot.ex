@@ -1,10 +1,20 @@
 defmodule Emojibot.Bot do
-  # Inclusions
   use Slack
 
+  defmodule Message do
+    defstruct icon_url: "https://avatars.slack-edge.com/2017-09-16/242182638770_50d22a57a3544dd0bbb7_192.png",
+              username: "emojibot",
+              thread_ts: nil
+  end
+
   def handle_event(%{name: name, type: "emoji_changed", subtype: "add"}, slack, state) do
-    emoji_channel = Application.get_env(:emojibot, :emoji_channel)
-    send_message(":#{name}: (`#{name}`)", emoji_channel, slack)
+    emoji_channel_id =
+      :emojibot
+      |> Application.get_env(:emoji_channel)
+      |> Slack.Lookups.lookup_channel_id(slack)
+
+    %{"ok" => true, "message" => %{"ts" => ts}} = Slack.Web.Chat.post_message(emoji_channel_id, ":#{name}:", %Message{})
+    %{"ok" => true} = Slack.Web.Chat.post_message(emoji_channel_id, "`#{name}`", %Message{thread_ts: ts})
 
     {:ok, state}
   end
