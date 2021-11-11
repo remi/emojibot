@@ -10,6 +10,8 @@ defmodule Emojibot.Bot do
               thread_ts: nil
   end
 
+  def handle_event(%{value: "alias:" <> _, type: "emoji_changed", subtype: "add"}, _, state), do: {:ok, state}
+
   def handle_event(%{name: name, type: "emoji_changed", subtype: "add"}, slack, state) do
     emoji_channel_id =
       :emojibot
