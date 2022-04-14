@@ -12,13 +12,14 @@ defmodule Emojibot.Bot do
 
   def handle_event(%{value: "alias:" <> _, type: "emoji_changed", subtype: "add"}, _, state), do: {:ok, state}
 
-  def handle_event(%{name: name, type: "emoji_changed", subtype: "add"}, slack, state) do
+  def handle_event(%{name: name, value: value, type: "emoji_changed", subtype: "add"}, slack, state) do
     emoji_channel_id =
       :emojibot
       |> Application.get_env(:emoji_channel)
       |> Lookups.lookup_channel_id(slack)
 
     %{"ok" => true, "message" => %{"ts" => ts}} = Chat.post_message(emoji_channel_id, ":#{name}:", %Message{})
+    %{"ok" => true} = Chat.post_message(emoji_channel_id, value, %Message{thread_ts: ts})
     %{"ok" => true} = Chat.post_message(emoji_channel_id, "`#{name}`", %Message{thread_ts: ts})
 
     {:ok, state}
