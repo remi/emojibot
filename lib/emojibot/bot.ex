@@ -1,7 +1,6 @@
 defmodule Emojibot.Bot do
   use Slack
 
-  alias Slack.Lookups
   alias Slack.Web.Chat
 
   defmodule Message do
@@ -12,11 +11,8 @@ defmodule Emojibot.Bot do
 
   def handle_event(%{value: "alias:" <> _, type: "emoji_changed", subtype: "add"}, _, state), do: {:ok, state}
 
-  def handle_event(%{name: name, value: value, type: "emoji_changed", subtype: "add"}, slack, state) do
-    emoji_channel_id =
-      :emojibot
-      |> Application.get_env(:emoji_channel)
-      |> Lookups.lookup_channel_id(slack)
+  def handle_event(%{name: name, value: value, type: "emoji_changed", subtype: "add"}, _slack, state) do
+    emoji_channel_id = Application.get_env(:slack, :emoji_channel_id)
 
     %{"ok" => true, "message" => %{"ts" => ts}} = Chat.post_message(emoji_channel_id, ":#{name}:", %Message{})
     %{"ok" => true} = Chat.post_message(emoji_channel_id, value, %Message{thread_ts: ts})
