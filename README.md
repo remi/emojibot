@@ -16,8 +16,8 @@ Emojibot expects a few environment variables when it starts.
 # Slack API token linked to the bot
 SLACK_API_TOKEN=foo
 
-# Channel name where the bot will forward messages
-EMOJI_CHANNEL=#emoji
+# Channel ID where the bot will forward messages
+EMOJI_CHANNEL_ID=C…
 ```
 
 ## Usage
