@@ -1,8 +1,6 @@
 defmodule Emojibot.Bot do
   use Slack.Bot
 
-  require Logger
-
   defmodule Message do
     defstruct icon_url: "https://avatars.slack-edge.com/2017-09-16/242182638770_50d22a57a3544dd0bbb7_192.png",
               username: "emojibot",
