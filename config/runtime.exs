@@ -1,7 +1,10 @@
 import Config
 
-# Slack
-config :slack, api_token: System.get_env("SLACK_API_TOKEN")
-
-# Emojibot
-config :emojibot, emoji_channel_id: System.get_env("EMOJI_CHANNEL_ID")
+config :emojibot, Emojibot.Bot,
+  app_token: System.fetch_env!("SLACK_APP_TOKEN"),
+  bot_token: System.fetch_env!("SLACK_BOT_TOKEN"),
+  emoji_channel_id: System.fetch_env!("SLACK_EMOJI_CHANNEL_ID"),
+  bot: Emojibot.Bot,
+  channels: [
+    types: ["public_channel"]
+  ]
