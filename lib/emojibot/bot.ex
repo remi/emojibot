@@ -16,9 +16,9 @@ defmodule Emojibot.Bot do
     token = Application.get_env(:emojibot, __MODULE__)[:bot_token]
 
     # NOTE We cannot use `Slack.Bot.send_message/2` because it’s using a queue that doesn’t return the actual sent message
-    {:ok, %{"ok" => true, "message" => %{"ts" => ts}}} = Slack.API.post("chat.postMessage", token, Map.from_struct(%Message{channel: emoji_channel_id, text: ":#{name}:"}))
-    {:ok, %{"ok" => true}} = Slack.API.post("chat.postMessage", token, Map.from_struct(%Message{channel: emoji_channel_id, thread_ts: ts, text: value}))
-    {:ok, %{"ok" => true}} = Slack.API.post("chat.postMessage", token, Map.from_struct(%Message{channel: emoji_channel_id, thread_ts: ts, text: "`#{name}`"}))
+    {:ok, %{"message" => %{"ts" => ts}}} = Slack.API.post("chat.postMessage", token, Map.from_struct(%Message{channel: emoji_channel_id, text: ":#{name}:"}))
+    {:ok, _} = Slack.API.post("chat.postMessage", token, Map.from_struct(%Message{channel: emoji_channel_id, thread_ts: ts, text: value}))
+    {:ok, _} = Slack.API.post("chat.postMessage", token, Map.from_struct(%Message{channel: emoji_channel_id, thread_ts: ts, text: "`#{name}`"}))
 
     :ok
   end
