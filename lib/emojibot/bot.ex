@@ -1,25 +1,27 @@
 defmodule Emojibot.Bot do
-  use Slack
-
-  alias Slack.Web.Chat
+  use Slack.Bot
 
   defmodule Message do
     defstruct icon_url: "https://avatars.slack-edge.com/2017-09-16/242182638770_50d22a57a3544dd0bbb7_192.png",
               username: "emojibot",
+              text: "",
+              channel: nil,
               thread_ts: nil
   end
 
-  def handle_event(%{value: "alias:" <> _, type: "emoji_changed", subtype: "add"}, _, state), do: {:ok, state}
+  def handle_event("emoji_changed", %{"value" => "alias:" <> _, "subtype" => "add"}, _bot), do: :ok
 
-  def handle_event(%{name: name, value: value, type: "emoji_changed", subtype: "add"}, _slack, state) do
-    emoji_channel_id = Application.get_env(:emojibot, :emoji_channel_id)
+  def handle_event("emoji_changed", %{"name" => name, "value" => value, "subtype" => "add"}, _bot) do
+    emoji_channel_id = Application.get_env(:emojibot, __MODULE__)[:emoji_channel_id]
+    token = Application.get_env(:emojibot, __MODULE__)[:bot_token]
 
-    %{"ok" => true, "message" => %{"ts" => ts}} = Chat.post_message(emoji_channel_id, ":#{name}:", %Message{})
-    %{"ok" => true} = Chat.post_message(emoji_channel_id, value, %Message{thread_ts: ts})
-    %{"ok" => true} = Chat.post_message(emoji_channel_id, "`#{name}`", %Message{thread_ts: ts})
+    # NOTE We cannot use `Slack.Bot.send_message/2` because it’s using a queue that doesn’t return the actual sent message
+    {:ok, %{"message" => %{"ts" => ts}}} = Slack.API.post("chat.postMessage", token, Map.from_struct(%Message{channel: emoji_channel_id, text: ":#{name}:"}))
+    {:ok, _} = Slack.API.post("chat.postMessage", token, Map.from_struct(%Message{channel: emoji_channel_id, thread_ts: ts, text: value}))
+    {:ok, _} = Slack.API.post("chat.postMessage", token, Map.from_struct(%Message{channel: emoji_channel_id, thread_ts: ts, text: "`#{name}`"}))
 
-    {:ok, state}
+    :ok
   end
 
-  def handle_event(_event, _slack, state), do: {:ok, state}
+  def handle_event(_type, _payload, _bot), do: :ok
 end

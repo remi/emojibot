@@ -5,7 +5,7 @@ defmodule Emojibot do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(Slack.Bot, [Emojibot.Bot, [], Application.get_env(:slack, :api_token)])
+      {Slack.Supervisor, Application.fetch_env!(:emojibot, Emojibot.Bot)}
     ]
 
     opts = [strategy: :one_for_one, name: Emojibot.Supervisor]

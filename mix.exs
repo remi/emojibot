@@ -6,10 +6,10 @@ defmodule Emojibot.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :slack], mod: {Emojibot, []}]
+    [applications: [:logger, :slack_elixir], mod: {Emojibot, []}]
   end
 
   defp deps do
-    [{:slack, "~> 0.23"}]
+    [{:slack_elixir, "~> 1.2.0"}]
   end
 end

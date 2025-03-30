@@ -13,8 +13,9 @@ $ git clone git@github.com:remiprev/emojibot.git
 Emojibot expects a few environment variables when it starts.
 
 ```bash
-# Slack API token linked to the bot
-SLACK_API_TOKEN=foo
+# Slack tokens linked to the bot
+SLACK_APP_TOKEN=foo
+SLACK_BOT_TOKEN=bar
 
 # Channel ID where the bot will forward messages
 EMOJI_CHANNEL_ID=C…
