@@ -10,6 +10,9 @@ defmodule Emojibot.Mixfile do
   end
 
   defp deps do
-    [{:slack_elixir, "~> 1.2.0"}]
+    [
+      {:castore, "~> 1.0.0"},
+      {:slack_elixir, "~> 1.2.0"}
+    ]
   end
 end
